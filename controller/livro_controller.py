@@ -1,64 +1,56 @@
 from database.db import Database
 from models.livro import Livro
-
-class LivroController: 
+class LivroController:
     def __init__(self, db_config):
         self.db = Database(
-            db_config["dbname"],
-            db_config["user"],
-            db_config["password"],
-            db_config["host"],
-            db_config["port"]
+            dbname=db_config["dbname"],
+            user=db_config["user"],
+            password=db_config["password"],
+            host=db_config["host"],
+            port=db_config["port"]
         )
         self.criar_tabela_se_nao_existir()
-        #self.view = LivroView()
-        
+    
     def criar_tabela_se_nao_existir(self):
         conn = self.db.connect()
-
         if conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS livros(
-                    id_livro SERIAL PRIMARY KEY,
-                    titulo VARCHAR(225) NOT NULL,
-                    autor VARCHAR(225) NOT NULL,
-                    ano_publicacao INT NOT NULL,
-                    isbn VARCHAR(20) NOT NULL UNIQUE
-                );
+            cur = conn.cursor()
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS livros (
+                    id SERIAL PRIMARY KEY,
+                    titulo VARCHAR(255) NOT NULL,
+                    autor VARCHAR(255) NOT NULL,
+                    ano INTEGER,
+                    isbn VARCHAR(20)    
+                ) 
             """)
-
             conn.commit()
-            cursor.close()
+            cur.close()
             conn.close()
-
-    def adicionar_livro(self, titulo, autor, ano_publicacao, isbn):
+    
+    def adicionar_livro(self, id, titulo, autor, ano, isbn):
         conn = self.db.connect()
-
         if conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO livros (titulo, autor, ano_publicacao, isbn) VALUES (%s, %s, %s, %s) ON CONFLICT (isbn) DO NOTHING;""",
-                (titulo, autor, ano_publicacao, isbn))
-            
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO livros (id, titulo, autor, ano, isbn) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING;",
+                (id, titulo, autor, ano, isbn)
+            )
             conn.commit()
-            cursor.close()
+            cur.close()
             conn.close()
-
             print("Livro adicionado com sucesso!")
         else:
-            print("Falha ao conectar ao banco de dados. Livro não adicionado.")
-
+            print("Erro ao conectar ao banco de dados.")
+            
     def listar_livros(self):
-        #self.view.mostrar_livros(livros)
         conn = self.db.connect()
         livros = []
         if conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT id_livro, titulo, autor, ano_publicacao, isbn FROM livros ORDER BY id_livro;")
-            for linha in cursor.fetchall():
+            cur = conn.cursor()
+            cur.execute("SELECT id, titulo, autor, ano, isbn FROM livros ORDER BY id;")
+            for linha in cur.fetchall():
                 livros.append(Livro(*linha))
-            cursor.close()
-            conn.close()
+                cur.close()
+                conn.close()
         return livros
-    

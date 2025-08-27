@@ -1,10 +1,10 @@
-class Livro:
-    def __init__(self, id_livro, titulo, autor, ano_publicacao, isbn):
-        self.id_livro = id_livro
+class Livro :
+    def __init__(self, id, titulo, autor, ano, isbn):
+        self.id = id
         self.titulo = titulo
         self.autor = autor
-        self.ano_publicacao = ano_publicacao
+        self.ano = ano
         self.isbn = isbn
 
-    def __str__(self):
-        return f"{self.titulo} - {self.autor} ({self.ano_publicacao}) - ISBN: {self.isbn}"
+    def __repr__(self):
+        return f"Livro(id={self.id}, titulo='{self.titulo}', autor='{self.autor}', ano={self.ano}, isbn='{self.isbn}')"

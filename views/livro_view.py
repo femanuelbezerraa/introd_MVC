@@ -1,3 +1,11 @@
+'''class LivroView:
+    def mostrar_livro(self, livro):
+        print (livro)
+        
+        def mostrar_livros(self, livros):
+            for livro in livros:
+                self.mostrar_livro(livro)'''
+                
 import tkinter as tk
 from tkinter import ttk, messagebox
 from controller.livro_controller import LivroController
@@ -6,9 +14,10 @@ class LivroView:
     def __init__(self, controller):
         self.controller = controller
         self._show_livros_tela()
-
-    @staticmethod
-    def iniciar_login_banco():
+    
+    @staticmethod   
+    def iniciar_Login_banco():
+        
         def conectar():
             db_config = {
                 "dbname": db_name_entry.get(),
@@ -22,57 +31,50 @@ class LivroView:
                 login_win.destroy()
                 LivroView(controller)
             except Exception as e:
-                messagebox.showerror("Erro", f"Falha ao conectar ao banco de dados: {e}")
+                messagebox.showerror("Erro", f"Erro ao conectar ao banco de dados:\n {e}")
         
         login_win = tk.Tk()
-        login_win.title("Login Banco de Dados")
+        login_win.title("Conectar ao Banco de Dados")
         login_win.geometry("300x250")
-
-        # Titulo " Banco de dados" no centro da tela
-        tk.Label(login_win, text="Banco de Dados", font=("Arial", 16)).pack(pady=10)
-        #o "login_win" é a janela principal
         
-        tk.Label(login_win, text="Nome:").pack(pady=5) # o "text" é o texto que aparece na tela, o "pack" é o método que organiza os elementos na tela
-        db_name_entry = tk.Entry(login_win) # o "Entry" é o campo de texto
-        db_name_entry.pack(pady=5)  
-        # o "pady" é o espaçamento vertical
-
-        tk.Label(login_win, text="Usuário:").pack(pady=5)
+        tk.Label(login_win, text="Dbname:").pack(pady=2)
+        db_name_entry = tk.Entry(login_win)
+        db_name_entry.pack()
+        
+        tk.Label(login_win, text="User:").pack(pady=2)
         db_user_entry = tk.Entry(login_win)
-        db_user_entry.pack(pady=5)
-
-        tk.Label(login_win, text="Senha:").pack(pady=5)
-        db_password_entry = tk.Entry(login_win, show="*") #o "show" é o caractere que aparece no lugar da senha
-        db_password_entry.pack(pady=5)
-
-        tk.Label(login_win, text="Host:").pack(pady=5)
+        db_user_entry.pack()
+        
+        tk.Label(login_win, text="Password:").pack(pady=2)
+        db_password_entry = tk.Entry(login_win)
+        db_password_entry.pack()
+        
+        tk.Label(login_win, text="Host:").pack(pady=2)
         db_host_entry = tk.Entry(login_win)
-        db_host_entry.pack(pady=5)
+        db_host_entry.pack()
 
-        tk.Label(login_win, text="Porta:").pack(pady=5)
+        tk.Label(login_win, text="Port:").pack(pady=2)
         db_port_entry = tk.Entry(login_win)
-        db_port_entry.pack(pady=5)
-
-        #botão conectar areedondado no canto inferior direito da tela abaixo dos campos de texto
-        conectar_button = tk.Button(login_win, text="Conectar", command=conectar) # o "command" é o método que é chamado quando o botão é clicado
-        conectar_button.pack(pady=10, side=tk.BOTTOM, anchor=tk.E) # o "side" é o lado onde o botão fica, o "anchor" é a âncora do botão
-        # "ancora" é a posição do botão em relação ao lado
-
+        db_port_entry.pack()
+        
+        tk.Button(login_win, text="Conectar", command=conectar).pack(pady=15)
+        login_win.mainloop()
+        
     def _show_livros_tela(self):
         livros = self.controller.listar_livros()
         win = tk.Tk()
-        win.title("Livros Cadastrados")
+        win.title("Livros cadastrados")
         win.geometry("700x400")
-
-        columns = ("id", "título", "autor", "ano de publicação", "isbn")
-        tabela = ttk.Treeview(win, columns=columns, show="headings")
+        
+        columns = ("ID", "Título", "Autor", "Ano", "ISBN")
+        tree = ttk.Treeview(win, columns=columns, show="headings")
         for col in columns:
-            tabela.heading(col, text=col.capitalize())
-            tabela.column(col, width=150)
+            tree.heading(col, text=col.capitalize())
+            tree.column(col, width=120)
         for livro in livros:
-            tabela.insert("", "end", values=(livro.id_livro, livro.titulo, livro.autor, livro.ano_publicacao, livro.isbn))
-
-        tabela.pack(expand=True, fill="both")
-
+            tree.insert("", tk.END, values=(livro.id, livro.titulo, livro.autor, livro.ano, livro.isbn))
+        tree.pack(expand=True, fill="both")
+        
         win.mainloop()
-
+              
+ 
