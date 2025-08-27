@@ -31,11 +31,22 @@ class LivroView:
                 login_win.destroy()
                 LivroView(controller)
             except Exception as e:
+<<<<<<< HEAD
                 messagebox.showerror("Erro", f"Erro ao conectar ao banco de dados:\n {e}")
         
         login_win = tk.Tk()
         login_win.title("Conectar ao Banco de Dados")
         login_win.geometry("300x250")
+=======
+                messagebox.showerror("Erro", f"Falha ao conectar ao banco de dados: {e}")
+        login_win = tk.Tk()
+        login_win.title("Login Banco de Dados")
+        login_win.geometry("350x300")
+
+        # Titulo " Banco de dados" no centro da tela
+        tk.Label(login_win, text="Banco de Dados", font=("Arial", 16)).pack(pady=10)
+        #o "login_win" é a janela principal
+>>>>>>> bea0971b3dccec7864bdd88f472c5d3b38640a1b
         
         tk.Label(login_win, text="Dbname:").pack(pady=2)
         db_name_entry = tk.Entry(login_win)
